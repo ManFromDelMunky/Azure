@@ -4,31 +4,33 @@ $UserID='username@contosodomain.onmicrosoft.com'
 $Password='HSGP@ssw0rd'
 $SecurePassword=Convertto-SecureString $Password –asplaintext -force
 $Credential=New-Object System.Management.Automation.PSCredential ($UserID,$SecurePassword)
-Add-AzureRMAccount -credential $credential -tenantid $TenantID -subscriptionid $SubscriptionID
+Add-AzAccount -credential $credential -tenantid $TenantID -subscriptionid $SubscriptionID
+#Set OneDrive location
+$OneDriveLocation = "$env:userprofile\OneDrive - DXC Production"
 
 #Connect First Time
-$AccountData=Add-AzureRMAccount
+$AccountData=Add-AzAccount
 #Login Interactively
 
 #Store data away for later user
-Get-AzureRMSubscription | export-clixml Subscription.xml
-Get-AzureRMTenant | export-clixml Tenant.xml
+Get-AzSubscription | export-clixml "$OneDriveLocation\PowerShell\Import\Subscription.xml"
+Get-AzTenant | export-clixml "$OneDriveLocation\PowerShell\Import\Tenant.xml"
 
 #OR
 
 $AccountData.Context.Tenant.TenantId
 $accountdata.Context.Subscription.SubscriptionId
 
-Get-AzureRmResource | Ft ResourceName,ResourceGroupName,ResourceType  Get-AzureRmResourcegroup | ft ResourceGroupName, Location, ResourceID 
+Get-AzResource | Ft ResourceName,ResourceGroupName,ResourceType  Get-AzResourceGroup | ft ResourceGroupName, Location, ResourceID 
 
-Get-AzureRmNetworkInterface | ft Name,Location,ResourceGroupName 
+Get-AzNetworkInterface | ft Name,Location,ResourceGroupName 
 
-Get-AzureRmVirtualNetwork | Select Name, ResourceGroupName, Subnets
+Get-AzVirtualNetwork | Select Name, ResourceGroupName, Subnets
 
 $RgName='HSG-AzureRG'
 $VMName='HSG-VirtualMachine'
 
-$VM=get-azurermvm -ResourceGroupName $RGName -name $VMName
+$VM=get-AzmVm -ResourceGroupName $RGName -name $VMName
 
 $VMSize=$vm.HardwareProfile.VmSize
 $ResourceGroup=$vm.ResourceGroupName
@@ -42,4 +44,4 @@ $Offer=$VM.StorageProfile.ImageReference.Offer
 $Sku=$VM.StorageProfile.ImageReference.Sku
 $Version=$VM.StorageProfile.ImageReference.Version
 
-$AzureImage = Get-AzureRmVMImage -Location $location -PublisherName $Publisher -Offer $Offer -Skus $Sku -Version $Version
+$AzureImage = Get-AzVMImage -Location $location -PublisherName $Publisher -Offer $Offer -Skus $Sku -Version $Version

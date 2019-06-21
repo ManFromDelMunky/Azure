@@ -6,14 +6,15 @@
 # Usage                                                                                                             #
 #   Copy and paste script in to PowerShell window                                                                   #
 #   To change credentials edit the SubscriptionID, TenantID or UserID                                               #
-#   To get SubscriptionID and TenantID use Login-AzureRMAccount and enter credentials                               #
+#   To get SubscriptionID and TenantID use Login-AzAccount and enter credentials                               #
 #   To Generate Password file                                                                                       #
 #   Read-Host -AsSecureString | ConvertFrom-SecureString | Out-File "$env:userprofile\OneDrive - DXC Production\PowerShell\Secure\TestLabPassword.enc"
 #   Enter Password at prompt and hit Enter                                                                          #
 # Scope                                                                                                             #
 #   Azure Resource manager model only, not clasic                                                                   #
 # Change Control                                                                                                    #
-#   Andy Ferguson 16/04/2018 Initial Version                                                                        #
+#   ManFromDelMunky 16/04/2018 Initial Version                                                                      #
+#   ManFromDelMunky 21/06/2019 Updated to new AZ powershell module from older AzRM                                  #
 # To Do                                                                                                             #
 #                                                                                                                   #
 # Source info                                                                                                       #
@@ -26,6 +27,6 @@ $UserID='andrew.ferguson.hpe@gmail.com'
 $PasswordFile = "$env:userprofile\OneDrive - DXC Production\PowerShell\Secure\TestLabPassword.enc"
 $SecurePassword = get-content $PasswordFile | convertto-securestring
 $Credential=New-Object System.Management.Automation.PSCredential ($UserID,$SecurePassword)
-Add-AzureRMAccount -credential $Credential -tenantid $TenantID -subscriptionid $SubscriptionID
+Add-AzAccount -credential $Credential -tenantid $TenantID -subscriptionid $SubscriptionID
 
 

@@ -1,5 +1,5 @@
 # Login to Azure PowerShell
-Login-AzureRmAccount
+Login-AzAccount
 
 # Create the self signed cert
 $currentDate = Get-Date
@@ -14,7 +14,7 @@ Export-PfxCertificate -cert "cert:\localmachine\my\$thumb" -FilePath c:\certific
 $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate("C:\certificates\examplecert.pfx", $pwd)
 $keyValue = [System.Convert]::ToBase64String($cert.GetRawCertData())
 $keyId = [guid]::NewGuid()
-Import-Module AzureRM.Resources
+Import-Module Az.Resources
 $keyCredential = New-Object  Microsoft.Azure.Commands.Resources.Models.ActiveDirectory.PSADKeyCredential
 $keyCredential.StartDate = $currentDate
 $keyCredential.EndDate= $endDate
@@ -24,13 +24,13 @@ $keyCredential.Usage = "Verify"
 $keyCredential.Value = $keyValue
 
 # Create the Azure Active Directory Application
-$azureAdApplication = New-AzureRmADApplication -DisplayName "<Your Application Display Name>" -HomePage "<https://YourApplicationHomePage>" -IdentifierUris "<https://YouApplicationUri>" -KeyCredentials $keyCredential  
+$azureAdApplication = New-AzADApplication -DisplayName "<Your Application Display Name>" -HomePage "<https://YourApplicationHomePage>" -IdentifierUris "<https://YouApplicationUri>" -KeyCredentials $keyCredential  
 
 # Create the Service Principal and connect it to the Application
-New-AzureRmADServicePrincipal -ApplicationId $azureAdApplication.ApplicationId
+New-AzADServicePrincipal -ApplicationId $azureAdApplication.ApplicationId
 
 # Give the Service Principal Reader access to the current subscription
-New-AzureRmRoleAssignment -RoleDefinitionName Reader -ServicePrincipalName $azureAdApplication.ApplicationId
+New-AzRoleAssignment -RoleDefinitionName Reader -ServicePrincipalName $azureAdApplication.ApplicationId
 
 # Now you can login to Azure PowerShell with your Service Principal and Certificate
-Login-AzureRmAccount -TenantId (Get-AzureRmContext).Tenant.TenantId -ServicePrincipal -CertificateThumbprint $thumb -ApplicationId $azureAdApplication.ApplicationId
+Login-AzAccount -TenantId (Get-AzContext).Tenant.TenantId -ServicePrincipal -CertificateThumbprint $thumb -ApplicationId $azureAdApplication.ApplicationId

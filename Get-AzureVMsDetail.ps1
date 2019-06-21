@@ -1,26 +1,27 @@
 #####################################################################################################################
 # File Name                                                                                                         #
-#   Get-AzureVMsDetail.ps1                                                                                            #
+#   Get-AzureVMsDetail.ps1                                                                                          #
 # Description                                                                                                       #
-#   Script to get detail on Azure Servers on mass                                                         #
+#   Script to get detail on Azure Servers on mass                                                                   #
 # Usage                                                                                                             #
 #   Copy and paste script in to PowerShell window whilst connected to an azure subscription                         #
-#   To login to an Azure subscription use Login-AzureRmAccount and enter valid credentials                          #
+#   To login to an Azure subscription use Login-AzAccount and enter valid credentials                               #
 # Scope                                                                                                             #
 #   Azure Resource manager model only, not clasic                                                                   #
 # Change Control                                                                                                    #
-#   Andy Ferguson 12/04/2018 Initial Version                                                                        #
+#   ManFromDelMunky 12/04/2018 Initial Version                                                                      #
+#   ManFromDelMunky 21/06/2019 Updated to new AZ powershell module from older AzRM                                  #
 # To Do                                                                                                             #
 #####################################################################################################################
 
 
-$RGs = Get-AzureRMResourceGroup
+$RGs = Get-AzResourceGroup
 foreach($RG in $RGs)
 {
-    $VMs = Get-AzureRmVM -ResourceGroupName $RG.ResourceGroupName
+    $VMs = Get-AzVM -ResourceGroupName $RG.ResourceGroupName
     foreach($VM in $VMs)
     {
-        $VMDetail = Get-AzureRmVM -ResourceGroupName $RG.ResourceGroupName -Name $VM.Name -Status
+        $VMDetail = Get-AzVM -ResourceGroupName $RG.ResourceGroupName -Name $VM.Name -Status
         foreach ($VMStatus in $VMDetail.Statuses)
         { 
             if($VMStatus.Code -like "PowerState/*")

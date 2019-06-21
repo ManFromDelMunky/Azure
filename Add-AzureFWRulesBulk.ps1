@@ -11,7 +11,7 @@ $OneDriveLocation = "$env:userprofile\OneDrive - DXC Production"
 #Set the CSV location
 $Rules = Import-CSV "$OneDriveLocation\PowerShell\Import\AD Firewall Rules.CSV"
 #Set the Network Security Group
-$NetSecGroup = Get-AzureRMNetworkSecurityGroup -ResourceGroupName "PKI-Domain" -Name "Domain-Controllers"
+$NetSecGroup = Get-AzNetworkSecurityGroup -ResourceGroupName "PKI-Domain" -Name "Domain-Controllers"
 #Works out that Unique Priority to give each rule NB TCP Rule will start at 2000 and UDP will be 3000
 [Int32]$TCPCount = (($NetSecGroup.SecurityRules | Where {$_.Protocol -eq "TCP" }| Sort-Object Priority -descending)[0]).Priority
 [Int32]$UDPCount = (($NetSecGroup.SecurityRules | Where {$_.Protocol -eq "UDP" }| Sort-Object Priority -descending)[0]).Priority
@@ -41,10 +41,10 @@ ForEach ($Rule in $Rules)
  #       $Priority = $UDPCount
  #       $UDPCount = $UDPCount++
  #       }
-    Add-AzureRmNetworkSecurityRuleConfig -Name $Name -Description $Description -NetworkSecurityGroup $NetSecGroup -Protocol $Protocol -SourcePortRange "*" -DestinationPortRange $DestinationPortRange -SourceAddressPrefix "10.0.0.0/22" -DestinationAddressPrefix "*" -Access "Allow" -Priority $Priority -Direction "Inbound"
+    Add-AzNetworkSecurityRuleConfig -Name $Name -Description $Description -NetworkSecurityGroup $NetSecGroup -Protocol $Protocol -SourcePortRange "*" -DestinationPortRange $DestinationPortRange -SourceAddressPrefix "10.0.0.0/22" -DestinationAddressPrefix "*" -Access "Allow" -Priority $Priority -Direction "Inbound"
     }
 
 
 
 #Now set all the rules Commented out  for saftey reasons
-#Set-AzureRmNetworkSecurityGroup -NetworkSecurityGroup $NetSecGroup
+#Set-AzNetworkSecurityGroup -NetworkSecurityGroup $NetSecGroup
