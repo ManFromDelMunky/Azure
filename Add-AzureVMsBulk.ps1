@@ -8,6 +8,8 @@
 #   To login to an Azure subscription use Connect-AzAccount and enter valid credentials                             #
 #   NB if creation goes wrong you may have to manually delete the VM and Network interface from Resources in Azure  #
 #   as well as the two disk blobs from the storage account                                                          #
+#   To get the SKU's use $Location='UK South' Get-AzVMImagePublisher -Location $Location Gives you publishers       #
+#   
 # Scope                                                                                                             #
 #   Azure Resource manager model only, not clasic                                                                   #
 # Change Control                                                                                                    #
@@ -19,6 +21,7 @@
 # Source info                                                                                                       #
 # https://blogs.technet.microsoft.com/heyscriptingguy/2016/06/06/create-azure-resource-manager-virtual-machines-by-u
 # sing-powershell-part-1/
+# https://docs.microsoft.com/en-us/azure/virtual-machines/windows/cli-ps-findimage                                  #
 #####################################################################################################################
 #Set OneDrive location
 $OneDriveLocation = "$env:userprofile\OneDrive - DXC Production"
@@ -36,7 +39,7 @@ New-AzResourceGroup -Name $ResourceGroup -Location $Location
 # Storage Account
 $SAName='uksdefaultstore'
 $AccountType='Standard_LRS'
-New-AzStorageAccount -Location $Location -Name $SAName -ResourceGroupName $ResourceGroup -SkuName Standard_LRS -AccessTier Hot -EnableHttpsTrafficOnly $true -Kind StorageV2
+New-AzStorageAccount -Location $Location -Name $SAName -ResourceGroupName $ResourceGroup -SkuName $AccountType -AccessTier Hot -EnableHttpsTrafficOnly $true -Kind StorageV2
 
 # Virtual Network
 $VNAddressPrefix = '10.0.0.0/16'
