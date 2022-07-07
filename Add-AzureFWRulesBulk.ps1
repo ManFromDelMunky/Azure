@@ -6,7 +6,7 @@
 #   Ensure $NetSecGroup is set to the group you want to addd the rules to                                           #
 #####################################################################################################################
 #Set OneDrive location
-$OneDriveLocation = "$env:userprofile\OneDrive - DXC Production"
+$OneDriveLocation = "$env:userprofile"
 
 #Set the CSV location
 $Rules = Import-CSV "$OneDriveLocation\PowerShell\Import\AD Firewall Rules.CSV"
